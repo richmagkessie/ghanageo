@@ -1,0 +1,2 @@
+[console_scripts]
+ghanageo-api = ghanageo.client:serve_api

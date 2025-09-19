@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: ghanageo
+Version: 1.0.0
+Summary: Comprehensive geographic data for Ghana
+Requires-Python: >=3.7
+Provides-Extra: api
+Requires-Dist: fastapi; extra == "api"
+Requires-Dist: uvicorn; extra == "api"
+Dynamic: provides-extra
+Dynamic: requires-python
+Dynamic: summary

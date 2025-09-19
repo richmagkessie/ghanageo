@@ -22,7 +22,7 @@ def get_districts(region: Optional[str] = None) -> List[Dict]:
     if region:
         region_data = get_region(region)  # This will raise error if not found
         return db.get_districts_by_region(region_data['id'])
-   č
+    
     # Get all districts if no region specified
     all_districts = []
     regions = get_regions()
