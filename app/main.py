@@ -23,12 +23,12 @@ app = FastAPI(
     }
 )
 
-# Add CORS middleware
+# Public read-only API — allow all origins, no credentials needed
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["GET"],
     allow_headers=["*"],
 )
 
