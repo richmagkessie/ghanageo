@@ -3,7 +3,7 @@ import json
 import os
 from pathlib import Path
 from typing import List, Dict, Optional
-from .models import Region, District, Coordinates
+from .models import Region, District, Town, Coordinates
 
 # Database path
 BASE_DIR = Path(__file__).parent
@@ -49,13 +49,41 @@ class GhanaGeoDB:
             ''')
             
             conn.execute('''
+                CREATE TABLE IF NOT EXISTS towns (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    district_id TEXT NOT NULL,
+                    district_name TEXT NOT NULL,
+                    region_id TEXT NOT NULL,
+                    region_name TEXT NOT NULL,
+                    type TEXT NOT NULL,
+                    population INTEGER,
+                    coordinates TEXT,
+                    FOREIGN KEY (district_id) REFERENCES districts (id),
+                    FOREIGN KEY (region_id) REFERENCES regions (id)
+                )
+            ''')
+
+            conn.execute('''
                 CREATE INDEX IF NOT EXISTS idx_regions_name ON regions(name);
             ''')
-            
+
             conn.execute('''
                 CREATE INDEX IF NOT EXISTS idx_districts_region ON districts(region_id);
             ''')
-            
+
+            conn.execute('''
+                CREATE INDEX IF NOT EXISTS idx_towns_district ON towns(district_id);
+            ''')
+
+            conn.execute('''
+                CREATE INDEX IF NOT EXISTS idx_towns_region ON towns(region_id);
+            ''')
+
+            conn.execute('''
+                CREATE INDEX IF NOT EXISTS idx_towns_name ON towns(name);
+            ''')
+
             conn.commit()
     
     def get_connection(self):
@@ -107,6 +135,69 @@ class GhanaGeoDB:
                 districts.append(district_data)
             return districts
     
+    def get_towns_by_district(self, district_id: str) -> List[Dict]:
+        """Get all towns in a district"""
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                'SELECT * FROM towns WHERE district_id = ? ORDER BY name',
+                (district_id,)
+            )
+            towns = []
+            for row in cursor.fetchall():
+                town_data = dict(row)
+                if town_data['coordinates']:
+                    town_data['coordinates'] = json.loads(town_data['coordinates'])
+                towns.append(town_data)
+            return towns
+
+    def get_towns_by_region(self, region_id: str) -> List[Dict]:
+        """Get all towns in a region"""
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                'SELECT * FROM towns WHERE region_id = ? ORDER BY name',
+                (region_id,)
+            )
+            towns = []
+            for row in cursor.fetchall():
+                town_data = dict(row)
+                if town_data['coordinates']:
+                    town_data['coordinates'] = json.loads(town_data['coordinates'])
+                towns.append(town_data)
+            return towns
+
+    def get_town_by_id(self, town_id: str) -> Optional[Dict]:
+        """Get a specific town by ID"""
+        with self.get_connection() as conn:
+            cursor = conn.execute('SELECT * FROM towns WHERE id = ?', (town_id,))
+            row = cursor.fetchone()
+            if row:
+                town_data = dict(row)
+                if town_data['coordinates']:
+                    town_data['coordinates'] = json.loads(town_data['coordinates'])
+                return town_data
+            return None
+
+    def get_all_towns(self, limit: int = 500, offset: int = 0) -> List[Dict]:
+        """Get paginated list of all towns"""
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                'SELECT * FROM towns ORDER BY region_id, name LIMIT ? OFFSET ?',
+                (limit, offset)
+            )
+            towns = []
+            for row in cursor.fetchall():
+                town_data = dict(row)
+                if town_data['coordinates']:
+                    town_data['coordinates'] = json.loads(town_data['coordinates'])
+                towns.append(town_data)
+            return towns
+
+    def get_towns_count(self) -> int:
+        """Get total number of towns"""
+        with self.get_connection() as conn:
+            cursor = conn.execute('SELECT COUNT(*) FROM towns')
+            return cursor.fetchone()[0]
+
     def search_locations(self, query: str, limit: int = 50) -> List[Dict]:
         """Search regions and districts"""
         results = []
@@ -135,7 +226,20 @@ class GhanaGeoDB:
                 if result['coordinates']:
                     result['coordinates'] = json.loads(result['coordinates'])
                 results.append(result)
-        
+
+            # Search towns
+            cursor = conn.execute(
+                "SELECT t.id, t.name, 'town' as type, t.region_name, t.district_name, t.coordinates FROM towns t WHERE LOWER(t.name) LIKE ?",
+                (query_lower,)
+            )
+            for row in cursor.fetchall():
+                result = dict(row)
+                result['region'] = result.pop('region_name')
+                result['district'] = result.pop('district_name')
+                if result['coordinates']:
+                    result['coordinates'] = json.loads(result['coordinates'])
+                results.append(result)
+
         return results[:limit]
 
 # Global database instance

@@ -38,17 +38,16 @@ async def root():
     """API information and health check"""
     return {
         "message": "GhanaGeo API - Comprehensive geographic data for Ghana",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "status": "active",
         "docs": "/docs",
         "endpoints": {
             "regions": "/regions",
+            "districts": "/districts?region=GR",
+            "towns": "/towns?district=GR-01",
             "search": "/search?q=query",
-            "districts": "/districts",
             "statistics": "/statistics"
-        },
-        "free_tier": "1000 requests/month",
-        "upgrade": "https://ghanageo.com/pricing"
+        }
     }
 
 # Health check
@@ -109,6 +108,72 @@ async def get_districts(region: Optional[str] = None):
             "success": True,
             "count": len(districts),
             "data": districts
+        }
+    except ghanageo.DataNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/towns", tags=["Geographic Data"])
+async def get_towns(
+    district: Optional[str] = None,
+    region: Optional[str] = None,
+    limit: int = Query(500, le=1000, description="Max results (when no filter applied)"),
+    offset: int = Query(0, description="Pagination offset")
+):
+    """Get towns/villages, optionally filtered by district or region"""
+    try:
+        towns = ghanageo.get_towns(district=district, region=region, limit=limit, offset=offset)
+        return {
+            "success": True,
+            "count": len(towns),
+            "data": towns
+        }
+    except ghanageo.DataNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/towns/{town_id}", tags=["Geographic Data"])
+async def get_town(town_id: str):
+    """Get a specific town by ID"""
+    try:
+        town = ghanageo.get_town(town_id)
+        return {
+            "success": True,
+            "data": town
+        }
+    except ghanageo.DataNotFoundError:
+        raise HTTPException(status_code=404, detail=f"Town '{town_id}' not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/districts/{district_id}/towns", tags=["Geographic Data"])
+async def get_district_towns(district_id: str):
+    """Get all towns in a specific district"""
+    try:
+        towns = ghanageo.get_towns(district=district_id)
+        return {
+            "success": True,
+            "district_id": district_id,
+            "count": len(towns),
+            "data": towns
+        }
+    except ghanageo.DataNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/regions/{region_id}/towns", tags=["Geographic Data"])
+async def get_region_towns(region_id: str):
+    """Get all towns in a specific region"""
+    try:
+        towns = ghanageo.get_towns(region=region_id)
+        return {
+            "success": True,
+            "region_id": region_id,
+            "count": len(towns),
+            "data": towns
         }
     except ghanageo.DataNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

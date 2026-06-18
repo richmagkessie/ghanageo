@@ -31,10 +31,21 @@ class District(BaseModel):
     area_km2: float
     coordinates: Optional[Coordinates] = None
 
+class Town(BaseModel):
+    id: str
+    name: str
+    district_id: str
+    district_name: str
+    region_id: str
+    region_name: str
+    type: str  # 'City', 'Town', 'Village', 'Suburb', 'Community'
+    population: Optional[int] = None
+    coordinates: Optional[Coordinates] = None
+
 class SearchResult(BaseModel):
     id: str
     name: str
-    type: str  # 'region', 'district', 'constituency'
+    type: str  # 'region', 'district', 'town'
     region: Optional[str] = None
     district: Optional[str] = None
     coordinates: Optional[Coordinates] = None

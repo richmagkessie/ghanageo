@@ -610,15 +610,425 @@ def setup_complete_ghana_database():
                 coords_json
             ))
         
+        # ============================================================
+        # TOWNS / VILLAGES DATA
+        # ============================================================
+        print("Creating towns table and inserting towns/villages data...")
+
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS towns (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                district_id TEXT NOT NULL,
+                district_name TEXT NOT NULL,
+                region_id TEXT NOT NULL,
+                region_name TEXT NOT NULL,
+                type TEXT NOT NULL,
+                population INTEGER,
+                coordinates TEXT
+            )
+        ''')
+        conn.execute('CREATE INDEX IF NOT EXISTS idx_towns_district ON towns(district_id)')
+        conn.execute('CREATE INDEX IF NOT EXISTS idx_towns_region ON towns(region_id)')
+        conn.execute('CREATE INDEX IF NOT EXISTS idx_towns_name ON towns(name)')
+
+        towns_data = [
+            # ====== GREATER ACCRA REGION ======
+            # GR-01 Accra Metropolitan
+            {"id":"GR-01-T01","name":"Osu","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":42000,"coordinates":{"lat":5.5557,"lng":-0.1719}},
+            {"id":"GR-01-T02","name":"Cantonments","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":18000,"coordinates":{"lat":5.5750,"lng":-0.1750}},
+            {"id":"GR-01-T03","name":"Labadi","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":35000,"coordinates":{"lat":5.5583,"lng":-0.1500}},
+            {"id":"GR-01-T04","name":"James Town","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":25000,"coordinates":{"lat":5.5500,"lng":-0.2083}},
+            {"id":"GR-01-T05","name":"Ussher Town","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":22000,"coordinates":{"lat":5.5483,"lng":-0.2050}},
+            {"id":"GR-01-T06","name":"Adabraka","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":45000,"coordinates":{"lat":5.5500,"lng":-0.1833}},
+            {"id":"GR-01-T07","name":"Labone","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":14000,"coordinates":{"lat":5.5617,"lng":-0.1633}},
+            {"id":"GR-01-T08","name":"Asylum Down","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":12000,"coordinates":{"lat":5.5600,"lng":-0.1900}},
+            {"id":"GR-01-T09","name":"Kotobabi","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":30000,"coordinates":{"lat":5.5700,"lng":-0.1950}},
+            {"id":"GR-01-T10","name":"Accra New Town","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":55000,"coordinates":{"lat":5.5750,"lng":-0.1833}},
+            {"id":"GR-01-T11","name":"Ridge","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":8000,"coordinates":{"lat":5.5700,"lng":-0.1950}},
+            {"id":"GR-01-T12","name":"North Ridge","district_id":"GR-01","district_name":"Accra Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":6000,"coordinates":{"lat":5.5833,"lng":-0.1950}},
+            # GR-02 Tema Metropolitan
+            {"id":"GR-02-T01","name":"Community 1","district_id":"GR-02","district_name":"Tema Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":18000,"coordinates":{"lat":5.6583,"lng":-0.0167}},
+            {"id":"GR-02-T02","name":"Sakumono","district_id":"GR-02","district_name":"Tema Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":35000,"coordinates":{"lat":5.6333,"lng":-0.0500}},
+            {"id":"GR-02-T03","name":"Lashibi","district_id":"GR-02","district_name":"Tema Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":28000,"coordinates":{"lat":5.6167,"lng":-0.0333}},
+            {"id":"GR-02-T04","name":"Klagon","district_id":"GR-02","district_name":"Tema Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":15000,"coordinates":{"lat":5.6333,"lng":0.0000}},
+            {"id":"GR-02-T05","name":"Community 25","district_id":"GR-02","district_name":"Tema Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":20000,"coordinates":{"lat":5.6833,"lng":0.0333}},
+            {"id":"GR-02-T06","name":"Tema Industrial Area","district_id":"GR-02","district_name":"Tema Metropolitan","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":12000,"coordinates":{"lat":5.6700,"lng":0.0000}},
+            # GR-03 La Nkwantanang Madina
+            {"id":"GR-03-T01","name":"Madina","district_id":"GR-03","district_name":"La Nkwantanang Madina Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":92000,"coordinates":{"lat":5.6836,"lng":-0.1668}},
+            {"id":"GR-03-T02","name":"Pantang","district_id":"GR-03","district_name":"La Nkwantanang Madina Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":18000,"coordinates":{"lat":5.7000,"lng":-0.1500}},
+            {"id":"GR-03-T03","name":"Oyarifa","district_id":"GR-03","district_name":"La Nkwantanang Madina Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":25000,"coordinates":{"lat":5.7167,"lng":-0.1333}},
+            {"id":"GR-03-T04","name":"Alogboshie","district_id":"GR-03","district_name":"La Nkwantanang Madina Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":15000,"coordinates":{"lat":5.6750,"lng":-0.1750}},
+            # GR-04 Ga West
+            {"id":"GR-04-T01","name":"Amasaman","district_id":"GR-04","district_name":"Ga West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":65000,"coordinates":{"lat":5.7500,"lng":-0.3167}},
+            {"id":"GR-04-T02","name":"Pokuase","district_id":"GR-04","district_name":"Ga West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":45000,"coordinates":{"lat":5.7500,"lng":-0.2833}},
+            {"id":"GR-04-T03","name":"Kwabenya","district_id":"GR-04","district_name":"Ga West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":38000,"coordinates":{"lat":5.7333,"lng":-0.2500}},
+            {"id":"GR-04-T04","name":"Medie","district_id":"GR-04","district_name":"Ga West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Village","population":8000,"coordinates":{"lat":5.8167,"lng":-0.3500}},
+            {"id":"GR-04-T05","name":"Abease","district_id":"GR-04","district_name":"Ga West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Village","population":5000,"coordinates":{"lat":5.8333,"lng":-0.3167}},
+            # GR-05 Ga South
+            {"id":"GR-05-T01","name":"Kasoa","district_id":"GR-05","district_name":"Ga South Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":185000,"coordinates":{"lat":5.5333,"lng":-0.4167}},
+            {"id":"GR-05-T02","name":"Weija","district_id":"GR-05","district_name":"Ga South Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":42000,"coordinates":{"lat":5.5500,"lng":-0.3333}},
+            {"id":"GR-05-T03","name":"Oblogo","district_id":"GR-05","district_name":"Ga South Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":18000,"coordinates":{"lat":5.5167,"lng":-0.3500}},
+            {"id":"GR-05-T04","name":"Domeabra","district_id":"GR-05","district_name":"Ga South Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":25000,"coordinates":{"lat":5.4833,"lng":-0.4500}},
+            {"id":"GR-05-T05","name":"Oduom","district_id":"GR-05","district_name":"Ga South Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":10000,"coordinates":{"lat":5.5000,"lng":-0.4833}},
+            # GR-06 Ga East
+            {"id":"GR-06-T01","name":"Abokobi","district_id":"GR-06","district_name":"Ga East Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":35000,"coordinates":{"lat":5.7667,"lng":-0.1333}},
+            {"id":"GR-06-T02","name":"Dome","district_id":"GR-06","district_name":"Ga East Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":55000,"coordinates":{"lat":5.6833,"lng":-0.2000}},
+            {"id":"GR-06-T03","name":"Haatso","district_id":"GR-06","district_name":"Ga East Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":28000,"coordinates":{"lat":5.6667,"lng":-0.1833}},
+            {"id":"GR-06-T04","name":"Ashale Botwe","district_id":"GR-06","district_name":"Ga East Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":22000,"coordinates":{"lat":5.6833,"lng":-0.1667}},
+            # GR-07 Ashaiman
+            {"id":"GR-07-T01","name":"Ashaiman","district_id":"GR-07","district_name":"Ashaiman Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":190000,"coordinates":{"lat":5.6953,"lng":-0.0302}},
+            {"id":"GR-07-T02","name":"Tulaku","district_id":"GR-07","district_name":"Ashaiman Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":18000,"coordinates":{"lat":5.7000,"lng":-0.0200}},
+            {"id":"GR-07-T03","name":"Zenu","district_id":"GR-07","district_name":"Ashaiman Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":22000,"coordinates":{"lat":5.6900,"lng":-0.0100}},
+            # GR-08 Ledzokuku
+            {"id":"GR-08-T01","name":"Teshie","district_id":"GR-08","district_name":"Ledzokuku Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":120000,"coordinates":{"lat":5.5833,"lng":-0.1000}},
+            {"id":"GR-08-T02","name":"Nungua","district_id":"GR-08","district_name":"Ledzokuku Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":65000,"coordinates":{"lat":5.6000,"lng":-0.0833}},
+            # GR-09 Krowor
+            {"id":"GR-09-T01","name":"Baatsonaa","district_id":"GR-09","district_name":"Krowor Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":35000,"coordinates":{"lat":5.6333,"lng":-0.0667}},
+            {"id":"GR-09-T02","name":"Spintex","district_id":"GR-09","district_name":"Krowor Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":28000,"coordinates":{"lat":5.6500,"lng":-0.0500}},
+            # GR-10 Adenta
+            {"id":"GR-10-T01","name":"Adenta","district_id":"GR-10","district_name":"Adenta Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":52000,"coordinates":{"lat":5.7000,"lng":-0.1667}},
+            {"id":"GR-10-T02","name":"Ogbojo","district_id":"GR-10","district_name":"Adenta Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":18000,"coordinates":{"lat":5.7167,"lng":-0.1667}},
+            # GR-11 La Dade Kotopon
+            {"id":"GR-11-T01","name":"La","district_id":"GR-11","district_name":"La Dade Kotopon Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":45000,"coordinates":{"lat":5.5783,"lng":-0.1450}},
+            # GR-12 Okaikwei North
+            {"id":"GR-12-T01","name":"Tesano","district_id":"GR-12","district_name":"Okaikwei North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":40000,"coordinates":{"lat":5.6167,"lng":-0.2167}},
+            {"id":"GR-12-T02","name":"Mamprobi","district_id":"GR-12","district_name":"Okaikwei North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":35000,"coordinates":{"lat":5.5500,"lng":-0.2333}},
+            {"id":"GR-12-T03","name":"Bubuashie","district_id":"GR-12","district_name":"Okaikwei North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":28000,"coordinates":{"lat":5.5667,"lng":-0.2333}},
+            # GR-13 Ablekuma North
+            {"id":"GR-13-T01","name":"Darkuman","district_id":"GR-13","district_name":"Ablekuma North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":55000,"coordinates":{"lat":5.5833,"lng":-0.2500}},
+            {"id":"GR-13-T02","name":"Abeka","district_id":"GR-13","district_name":"Ablekuma North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":48000,"coordinates":{"lat":5.5833,"lng":-0.2333}},
+            {"id":"GR-13-T03","name":"Kwashieman","district_id":"GR-13","district_name":"Ablekuma North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":38000,"coordinates":{"lat":5.5833,"lng":-0.2667}},
+            # GR-14 Ablekuma Central
+            {"id":"GR-14-T01","name":"Anyaa","district_id":"GR-14","district_name":"Ablekuma Central Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":65000,"coordinates":{"lat":5.5667,"lng":-0.2667}},
+            {"id":"GR-14-T02","name":"Mallam","district_id":"GR-14","district_name":"Ablekuma Central Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":45000,"coordinates":{"lat":5.5500,"lng":-0.2833}},
+            {"id":"GR-14-T03","name":"Sowutuom","district_id":"GR-14","district_name":"Ablekuma Central Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":40000,"coordinates":{"lat":5.5833,"lng":-0.2667}},
+            {"id":"GR-14-T04","name":"Tantra Hill","district_id":"GR-14","district_name":"Ablekuma Central Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":22000,"coordinates":{"lat":5.5833,"lng":-0.2833}},
+            # GR-15 Ablekuma West
+            {"id":"GR-15-T01","name":"Dansoman","district_id":"GR-15","district_name":"Ablekuma West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":85000,"coordinates":{"lat":5.5500,"lng":-0.2833}},
+            {"id":"GR-15-T02","name":"Kaneshie","district_id":"GR-15","district_name":"Ablekuma West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":45000,"coordinates":{"lat":5.5667,"lng":-0.2333}},
+            {"id":"GR-15-T03","name":"Gbawe","district_id":"GR-15","district_name":"Ablekuma West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":35000,"coordinates":{"lat":5.5500,"lng":-0.3000}},
+            # GR-16 Ayawaso East
+            {"id":"GR-16-T01","name":"Nima","district_id":"GR-16","district_name":"Ayawaso East Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":65000,"coordinates":{"lat":5.5833,"lng":-0.2000}},
+            {"id":"GR-16-T02","name":"Maamobi","district_id":"GR-16","district_name":"Ayawaso East Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":42000,"coordinates":{"lat":5.5833,"lng":-0.1833}},
+            # GR-17 Ayawaso North
+            {"id":"GR-17-T01","name":"Dzorwulu","district_id":"GR-17","district_name":"Ayawaso North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":25000,"coordinates":{"lat":5.6000,"lng":-0.2167}},
+            {"id":"GR-17-T02","name":"Abelemkpe","district_id":"GR-17","district_name":"Ayawaso North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":20000,"coordinates":{"lat":5.5833,"lng":-0.2167}},
+            # GR-18 Ayawaso Central
+            {"id":"GR-18-T01","name":"Kokomlemle","district_id":"GR-18","district_name":"Ayawaso Central Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":40000,"coordinates":{"lat":5.5833,"lng":-0.2167}},
+            # GR-19 Ayawaso West
+            {"id":"GR-19-T01","name":"East Legon","district_id":"GR-19","district_name":"Ayawaso West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Suburb","population":32000,"coordinates":{"lat":5.6500,"lng":-0.1667}},
+            {"id":"GR-19-T02","name":"Legon","district_id":"GR-19","district_name":"Ayawaso West Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":22000,"coordinates":{"lat":5.6500,"lng":-0.1833}},
+            # GR-20 Ga Central
+            {"id":"GR-20-T01","name":"Sowutuom","district_id":"GR-20","district_name":"Ga Central Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":35000,"coordinates":{"lat":5.5833,"lng":-0.2667}},
+            # GR-21 Ga North
+            {"id":"GR-21-T01","name":"Ofankor","district_id":"GR-21","district_name":"Ga North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":30000,"coordinates":{"lat":5.7333,"lng":-0.2333}},
+            {"id":"GR-21-T02","name":"Accra Hills","district_id":"GR-21","district_name":"Ga North Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":18000,"coordinates":{"lat":5.7500,"lng":-0.2167}},
+            # GR-22 Weija Gbawe
+            {"id":"GR-22-T01","name":"Weija","district_id":"GR-22","district_name":"Weija Gbawe Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":55000,"coordinates":{"lat":5.5500,"lng":-0.3333}},
+            {"id":"GR-22-T02","name":"Gbawe","district_id":"GR-22","district_name":"Weija Gbawe Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":35000,"coordinates":{"lat":5.5333,"lng":-0.3167}},
+            {"id":"GR-22-T03","name":"Tetegu","district_id":"GR-22","district_name":"Weija Gbawe Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":12000,"coordinates":{"lat":5.5000,"lng":-0.3833}},
+            # GR-23 Kpone Katamanso
+            {"id":"GR-23-T01","name":"Kpone","district_id":"GR-23","district_name":"Kpone Katamanso Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":45000,"coordinates":{"lat":5.7000,"lng":0.0500}},
+            {"id":"GR-23-T02","name":"Dawhenya","district_id":"GR-23","district_name":"Kpone Katamanso Municipal","region_id":"GR","region_name":"Greater Accra Region","type":"Community","population":20000,"coordinates":{"lat":5.7333,"lng":0.0833}},
+            # GR-24 Ningo Prampram
+            {"id":"GR-24-T01","name":"Prampram","district_id":"GR-24","district_name":"Ningo Prampram District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":38000,"coordinates":{"lat":5.7167,"lng":0.1000}},
+            {"id":"GR-24-T02","name":"Ningo","district_id":"GR-24","district_name":"Ningo Prampram District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":22000,"coordinates":{"lat":5.7500,"lng":0.1500}},
+            {"id":"GR-24-T03","name":"Afienya","district_id":"GR-24","district_name":"Ningo Prampram District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":18000,"coordinates":{"lat":5.7667,"lng":0.0667}},
+            # GR-25 Shai Osudoku
+            {"id":"GR-25-T01","name":"Dodowa","district_id":"GR-25","district_name":"Shai Osudoku District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":28000,"coordinates":{"lat":5.8833,"lng":-0.0833}},
+            {"id":"GR-25-T02","name":"Akuse","district_id":"GR-25","district_name":"Shai Osudoku District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":12000,"coordinates":{"lat":6.1167,"lng":0.1000}},
+            # GR-26 Ada East
+            {"id":"GR-26-T01","name":"Ada Foah","district_id":"GR-26","district_name":"Ada East District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":15000,"coordinates":{"lat":5.7833,"lng":0.6333}},
+            {"id":"GR-26-T02","name":"Kasseh","district_id":"GR-26","district_name":"Ada East District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":10000,"coordinates":{"lat":5.8500,"lng":0.5667}},
+            # GR-27 Ada West
+            {"id":"GR-27-T01","name":"Sege","district_id":"GR-27","district_name":"Ada West District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":12000,"coordinates":{"lat":5.9333,"lng":0.4167}},
+            {"id":"GR-27-T02","name":"Mepe","district_id":"GR-27","district_name":"Ada West District","region_id":"GR","region_name":"Greater Accra Region","type":"Village","population":6000,"coordinates":{"lat":6.0000,"lng":0.4667}},
+            # GR-28 Asuogyaman
+            {"id":"GR-28-T01","name":"Akosombo","district_id":"GR-28","district_name":"Asuogyaman District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":22000,"coordinates":{"lat":6.3000,"lng":0.0833}},
+            {"id":"GR-28-T02","name":"Atimpoku","district_id":"GR-28","district_name":"Asuogyaman District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":8000,"coordinates":{"lat":6.2167,"lng":0.1167}},
+            {"id":"GR-28-T03","name":"Kpong","district_id":"GR-28","district_name":"Asuogyaman District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":12000,"coordinates":{"lat":6.1500,"lng":0.0833}},
+            {"id":"GR-28-T04","name":"Senchi","district_id":"GR-28","district_name":"Asuogyaman District","region_id":"GR","region_name":"Greater Accra Region","type":"Village","population":5000,"coordinates":{"lat":6.2667,"lng":0.1000}},
+            # GR-29 South Tongu
+            {"id":"GR-29-T01","name":"Sogakope","district_id":"GR-29","district_name":"South Tongu District","region_id":"GR","region_name":"Greater Accra Region","type":"Town","population":18000,"coordinates":{"lat":6.0333,"lng":0.5833}},
+
+            # ====== ASHANTI REGION ======
+            # AS-01 Kumasi Metropolitan
+            {"id":"AS-01-T01","name":"Adum","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":55000,"coordinates":{"lat":6.6885,"lng":-1.6244}},
+            {"id":"AS-01-T02","name":"Asafo","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":45000,"coordinates":{"lat":6.7000,"lng":-1.6167}},
+            {"id":"AS-01-T03","name":"Dichemso","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":38000,"coordinates":{"lat":6.6833,"lng":-1.6167}},
+            {"id":"AS-01-T04","name":"Ahodwo","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Suburb","population":22000,"coordinates":{"lat":6.6750,"lng":-1.6333}},
+            {"id":"AS-01-T05","name":"Ayigya","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":28000,"coordinates":{"lat":6.6833,"lng":-1.5667}},
+            {"id":"AS-01-T06","name":"Bomso","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":18000,"coordinates":{"lat":6.6833,"lng":-1.5833}},
+            {"id":"AS-01-T07","name":"Kaase","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":30000,"coordinates":{"lat":6.6667,"lng":-1.5833}},
+            {"id":"AS-01-T08","name":"Kronom","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":25000,"coordinates":{"lat":6.6500,"lng":-1.6000}},
+            {"id":"AS-01-T09","name":"Kentinkrono","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":20000,"coordinates":{"lat":6.6500,"lng":-1.6500}},
+            {"id":"AS-01-T10","name":"Oforikrom","district_id":"AS-01","district_name":"Kumasi Metropolitan","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":55000,"coordinates":{"lat":6.6833,"lng":-1.6000}},
+            # AS-02 Obuasi
+            {"id":"AS-02-T01","name":"Obuasi","district_id":"AS-02","district_name":"Obuasi Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":95000,"coordinates":{"lat":6.2028,"lng":-1.6703}},
+            {"id":"AS-02-T02","name":"Sanso","district_id":"AS-02","district_name":"Obuasi Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":12000,"coordinates":{"lat":6.2167,"lng":-1.6500}},
+            {"id":"AS-02-T03","name":"Tutuka","district_id":"AS-02","district_name":"Obuasi Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":8000,"coordinates":{"lat":6.1833,"lng":-1.6833}},
+            # AS-03 Ejisu
+            {"id":"AS-03-T01","name":"Ejisu","district_id":"AS-03","district_name":"Ejisu Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":45000,"coordinates":{"lat":6.3333,"lng":-1.3667}},
+            {"id":"AS-03-T02","name":"Besease","district_id":"AS-03","district_name":"Ejisu Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Village","population":8000,"coordinates":{"lat":6.3500,"lng":-1.3500}},
+            {"id":"AS-03-T03","name":"Bonwire","district_id":"AS-03","district_name":"Ejisu Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":12000,"coordinates":{"lat":6.4500,"lng":-1.4167}},
+            # AS-04 Asante Akim North
+            {"id":"AS-04-T01","name":"Agogo","district_id":"AS-04","district_name":"Asante Akim North Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":42000,"coordinates":{"lat":6.8000,"lng":-1.0833}},
+            {"id":"AS-04-T02","name":"Hwidiem","district_id":"AS-04","district_name":"Asante Akim North Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":12000,"coordinates":{"lat":6.7833,"lng":-1.0667}},
+            # AS-05 Bekwai
+            {"id":"AS-05-T01","name":"Bekwai","district_id":"AS-05","district_name":"Bekwai Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":38000,"coordinates":{"lat":6.4500,"lng":-1.5833}},
+            {"id":"AS-05-T02","name":"Antoakyire","district_id":"AS-05","district_name":"Bekwai Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Village","population":5000,"coordinates":{"lat":6.4167,"lng":-1.6000}},
+            # AS-08 Suame
+            {"id":"AS-08-T01","name":"Suame","district_id":"AS-08","district_name":"Suame Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":75000,"coordinates":{"lat":6.7000,"lng":-1.6167}},
+            # AS-13 Bantama
+            {"id":"AS-13-T01","name":"Bantama","district_id":"AS-13","district_name":"Bantama Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":65000,"coordinates":{"lat":6.7000,"lng":-1.6333}},
+            {"id":"AS-13-T02","name":"Ahenema Kokoben","district_id":"AS-13","district_name":"Bantama Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Community","population":25000,"coordinates":{"lat":6.7167,"lng":-1.6500}},
+            # AS-14 Juaben
+            {"id":"AS-14-T01","name":"Juaben","district_id":"AS-14","district_name":"Juaben Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":28000,"coordinates":{"lat":6.5667,"lng":-1.3333}},
+            # AS-16 Konongo
+            {"id":"AS-16-T01","name":"Konongo","district_id":"AS-16","district_name":"Konongo-Odumase Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":38000,"coordinates":{"lat":6.6167,"lng":-1.2167}},
+            {"id":"AS-16-T02","name":"Odumase","district_id":"AS-16","district_name":"Konongo-Odumase Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":18000,"coordinates":{"lat":6.6333,"lng":-1.2000}},
+            # AS-18 Atwima Nwabiagya
+            {"id":"AS-18-T01","name":"Nkawie","district_id":"AS-18","district_name":"Atwima Nwabiagya Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":35000,"coordinates":{"lat":6.5500,"lng":-1.8000}},
+            {"id":"AS-18-T02","name":"Toase","district_id":"AS-18","district_name":"Atwima Nwabiagya Municipal","region_id":"AS","region_name":"Ashanti Region","type":"Village","population":5000,"coordinates":{"lat":6.5333,"lng":-1.8167}},
+            # AS-24 Ahafo Ano North
+            {"id":"AS-24-T01","name":"Tepa","district_id":"AS-24","district_name":"Ahafo Ano North Municipal District","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":28000,"coordinates":{"lat":6.9167,"lng":-2.2000}},
+            # AS-33 Ejura
+            {"id":"AS-33-T01","name":"Ejura","district_id":"AS-33","district_name":"Ejura Sekyedumase Municipal District","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":42000,"coordinates":{"lat":7.3833,"lng":-1.3667}},
+            {"id":"AS-33-T02","name":"Sekyedumase","district_id":"AS-33","district_name":"Ejura Sekyedumase Municipal District","region_id":"AS","region_name":"Ashanti Region","type":"Village","population":6000,"coordinates":{"lat":7.3500,"lng":-1.4000}},
+            # AS-34 Mampong
+            {"id":"AS-34-T01","name":"Mampong","district_id":"AS-34","district_name":"Mampong Municipal District","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":35000,"coordinates":{"lat":7.0667,"lng":-1.4000}},
+            {"id":"AS-34-T02","name":"Nyameso","district_id":"AS-34","district_name":"Mampong Municipal District","region_id":"AS","region_name":"Ashanti Region","type":"Village","population":4000,"coordinates":{"lat":7.1000,"lng":-1.3667}},
+            # AS-35 Offinso
+            {"id":"AS-35-T01","name":"Offinso","district_id":"AS-35","district_name":"Offinso Municipal District","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":25000,"coordinates":{"lat":7.0333,"lng":-1.7667}},
+            # AS-39 Sekyere East
+            {"id":"AS-39-T01","name":"Effiduase","district_id":"AS-39","district_name":"Sekyere East District","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":22000,"coordinates":{"lat":6.9333,"lng":-1.2500}},
+            # AS-40 Sekyere Kumawu
+            {"id":"AS-40-T01","name":"Kumawu","district_id":"AS-40","district_name":"Sekyere Kumawu District","region_id":"AS","region_name":"Ashanti Region","type":"Town","population":18000,"coordinates":{"lat":6.9667,"lng":-1.1333}},
+
+            # ====== WESTERN REGION ======
+            # WR-01 Sekondi-Takoradi
+            {"id":"WR-01-T01","name":"Sekondi","district_id":"WR-01","district_name":"Sekondi-Takoradi Metropolitan","region_id":"WR","region_name":"Western Region","type":"Town","population":145000,"coordinates":{"lat":4.9340,"lng":-1.7040}},
+            {"id":"WR-01-T02","name":"Takoradi","district_id":"WR-01","district_name":"Sekondi-Takoradi Metropolitan","region_id":"WR","region_name":"Western Region","type":"City","population":220000,"coordinates":{"lat":4.8853,"lng":-1.7553}},
+            {"id":"WR-01-T03","name":"Effia","district_id":"WR-01","district_name":"Sekondi-Takoradi Metropolitan","region_id":"WR","region_name":"Western Region","type":"Suburb","population":35000,"coordinates":{"lat":4.9000,"lng":-1.7833}},
+            {"id":"WR-01-T04","name":"Kojokrom","district_id":"WR-01","district_name":"Sekondi-Takoradi Metropolitan","region_id":"WR","region_name":"Western Region","type":"Suburb","population":28000,"coordinates":{"lat":4.9000,"lng":-1.7667}},
+            {"id":"WR-01-T05","name":"Kwesimintsim","district_id":"WR-01","district_name":"Sekondi-Takoradi Metropolitan","region_id":"WR","region_name":"Western Region","type":"Suburb","population":30000,"coordinates":{"lat":4.9167,"lng":-1.7833}},
+            # WR-02 Tarkwa-Nsuaem
+            {"id":"WR-02-T01","name":"Tarkwa","district_id":"WR-02","district_name":"Tarkwa-Nsuaem Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":55000,"coordinates":{"lat":5.2897,"lng":-1.9939}},
+            {"id":"WR-02-T02","name":"Bogoso","district_id":"WR-02","district_name":"Tarkwa-Nsuaem Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":25000,"coordinates":{"lat":5.5167,"lng":-2.0667}},
+            {"id":"WR-02-T03","name":"Nsuaem","district_id":"WR-02","district_name":"Tarkwa-Nsuaem Municipal","region_id":"WR","region_name":"Western Region","type":"Village","population":6000,"coordinates":{"lat":5.3167,"lng":-2.0167}},
+            # WR-03 Prestea
+            {"id":"WR-03-T01","name":"Prestea","district_id":"WR-03","district_name":"Prestea Huni Valley Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":32000,"coordinates":{"lat":5.4333,"lng":-2.1333}},
+            {"id":"WR-03-T02","name":"Huni Valley","district_id":"WR-03","district_name":"Prestea Huni Valley Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":12000,"coordinates":{"lat":5.5500,"lng":-2.0167}},
+            # WR-04 Shama
+            {"id":"WR-04-T01","name":"Shama","district_id":"WR-04","district_name":"Shama District","region_id":"WR","region_name":"Western Region","type":"Town","population":25000,"coordinates":{"lat":5.0167,"lng":-1.6667}},
+            # WR-05 Ahanta West
+            {"id":"WR-05-T01","name":"Agona","district_id":"WR-05","district_name":"Ahanta West District","region_id":"WR","region_name":"Western Region","type":"Town","population":18000,"coordinates":{"lat":4.8667,"lng":-1.8833}},
+            {"id":"WR-05-T02","name":"Dixcove","district_id":"WR-05","district_name":"Ahanta West District","region_id":"WR","region_name":"Western Region","type":"Town","population":8000,"coordinates":{"lat":4.8167,"lng":-1.9833}},
+            # WR-06 Nzema East
+            {"id":"WR-06-T01","name":"Axim","district_id":"WR-06","district_name":"Nzema East Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":22000,"coordinates":{"lat":4.8667,"lng":-2.2333}},
+            # WR-07 Ellembelle
+            {"id":"WR-07-T01","name":"Nkroful","district_id":"WR-07","district_name":"Ellembelle District","region_id":"WR","region_name":"Western Region","type":"Town","population":12000,"coordinates":{"lat":4.9833,"lng":-2.3000}},
+            # WR-08 Jomoro
+            {"id":"WR-08-T01","name":"Half Assini","district_id":"WR-08","district_name":"Jomoro District","region_id":"WR","region_name":"Western Region","type":"Town","population":18000,"coordinates":{"lat":4.8333,"lng":-2.6167}},
+            # WR-10 Wassa Amenfi East
+            {"id":"WR-10-T01","name":"Wassa Akropong","district_id":"WR-10","district_name":"Wassa Amenfi East Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":15000,"coordinates":{"lat":5.5833,"lng":-2.0833}},
+            # WR-11 Wassa Amenfi West
+            {"id":"WR-11-T01","name":"Asankrangwa","district_id":"WR-11","district_name":"Wassa Amenfi West Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":18000,"coordinates":{"lat":5.4667,"lng":-2.3000}},
+            # WR-13 Aowin
+            {"id":"WR-13-T01","name":"Enchi","district_id":"WR-13","district_name":"Aowin Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":22000,"coordinates":{"lat":6.1000,"lng":-2.7833}},
+            # WR-15 Bibiani
+            {"id":"WR-15-T01","name":"Bibiani","district_id":"WR-15","district_name":"Bibiani Anhwiaso Bekwai Municipal","region_id":"WR","region_name":"Western Region","type":"Town","population":42000,"coordinates":{"lat":6.4667,"lng":-2.3167}},
+
+            # ====== CENTRAL REGION ======
+            # CR-01 Cape Coast
+            {"id":"CR-01-T01","name":"Cape Coast","district_id":"CR-01","district_name":"Cape Coast Metropolitan","region_id":"CR","region_name":"Central Region","type":"City","population":169894,"coordinates":{"lat":5.1312,"lng":-1.2814}},
+            {"id":"CR-01-T02","name":"Pedu","district_id":"CR-01","district_name":"Cape Coast Metropolitan","region_id":"CR","region_name":"Central Region","type":"Suburb","population":18000,"coordinates":{"lat":5.1500,"lng":-1.2667}},
+            {"id":"CR-01-T03","name":"Abura","district_id":"CR-01","district_name":"Cape Coast Metropolitan","region_id":"CR","region_name":"Central Region","type":"Suburb","population":22000,"coordinates":{"lat":5.1167,"lng":-1.2667}},
+            # CR-02 Komenda Edina Eguafo Abirem
+            {"id":"CR-02-T01","name":"Elmina","district_id":"CR-02","district_name":"Komenda Edina Eguafo Abirem Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":35000,"coordinates":{"lat":5.0833,"lng":-1.3500}},
+            {"id":"CR-02-T02","name":"Komenda","district_id":"CR-02","district_name":"Komenda Edina Eguafo Abirem Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":15000,"coordinates":{"lat":5.0667,"lng":-1.4667}},
+            # CR-06 Agona West
+            {"id":"CR-06-T01","name":"Agona Swedru","district_id":"CR-06","district_name":"Agona West Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":82000,"coordinates":{"lat":5.4667,"lng":-0.6833}},
+            {"id":"CR-06-T02","name":"Agona Nkum","district_id":"CR-06","district_name":"Agona West Municipal","region_id":"CR","region_name":"Central Region","type":"Village","population":8000,"coordinates":{"lat":5.5000,"lng":-0.7167}},
+            # CR-07 Agona East
+            {"id":"CR-07-T01","name":"Nsaba","district_id":"CR-07","district_name":"Agona East District","region_id":"CR","region_name":"Central Region","type":"Town","population":18000,"coordinates":{"lat":5.4500,"lng":-0.9167}},
+            # CR-08 Awutu Senya East
+            {"id":"CR-08-T01","name":"Kasoa","district_id":"CR-08","district_name":"Awutu Senya East Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":200000,"coordinates":{"lat":5.5333,"lng":-0.4167}},
+            {"id":"CR-08-T02","name":"New Amikope","district_id":"CR-08","district_name":"Awutu Senya East Municipal","region_id":"CR","region_name":"Central Region","type":"Community","population":15000,"coordinates":{"lat":5.5167,"lng":-0.4333}},
+            # CR-10 Effutu
+            {"id":"CR-10-T01","name":"Winneba","district_id":"CR-10","district_name":"Effutu Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":48000,"coordinates":{"lat":5.3500,"lng":-0.6167}},
+            # CR-13 Gomoa West
+            {"id":"CR-13-T01","name":"Apam","district_id":"CR-13","district_name":"Gomoa West District","region_id":"CR","region_name":"Central Region","type":"Town","population":22000,"coordinates":{"lat":5.2833,"lng":-0.7667}},
+            # CR-17 Mfantsiman
+            {"id":"CR-17-T01","name":"Saltpond","district_id":"CR-17","district_name":"Mfantsiman Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":32000,"coordinates":{"lat":5.2000,"lng":-1.0833}},
+            {"id":"CR-17-T02","name":"Mankessim","district_id":"CR-17","district_name":"Mfantsiman Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":25000,"coordinates":{"lat":5.2667,"lng":-1.0167}},
+            # CR-21 Upper Denkyira East
+            {"id":"CR-21-T01","name":"Dunkwa-on-Offin","district_id":"CR-21","district_name":"Upper Denkyira East Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":35000,"coordinates":{"lat":5.9667,"lng":-1.7667}},
+            # CR-03 Assin North
+            {"id":"CR-03-T01","name":"Assin Bereku","district_id":"CR-03","district_name":"Assin North Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":22000,"coordinates":{"lat":5.6167,"lng":-1.2333}},
+            # CR-04 Assin Central
+            {"id":"CR-04-T01","name":"Assin Foso","district_id":"CR-04","district_name":"Assin Central Municipal","region_id":"CR","region_name":"Central Region","type":"Town","population":28000,"coordinates":{"lat":5.5167,"lng":-1.2833}},
+
+            # ====== EASTERN REGION ======
+            # ER-01 New-Juaben
+            {"id":"ER-01-T01","name":"Koforidua","district_id":"ER-01","district_name":"New-Juaben Municipal","region_id":"ER","region_name":"Eastern Region","type":"City","population":120000,"coordinates":{"lat":6.0891,"lng":-0.2570}},
+            {"id":"ER-01-T02","name":"Effiduase-Koforidua","district_id":"ER-01","district_name":"New-Juaben Municipal","region_id":"ER","region_name":"Eastern Region","type":"Suburb","population":25000,"coordinates":{"lat":6.1000,"lng":-0.2667}},
+            # ER-03 West Akim
+            {"id":"ER-03-T01","name":"Asamankese","district_id":"ER-03","district_name":"West Akim Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":48000,"coordinates":{"lat":5.8667,"lng":-0.6667}},
+            # ER-05 Birim Central
+            {"id":"ER-05-T01","name":"Akim Oda","district_id":"ER-05","district_name":"Birim Central Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":55000,"coordinates":{"lat":5.9333,"lng":-0.9833}},
+            # ER-09 Suhum
+            {"id":"ER-09-T01","name":"Suhum","district_id":"ER-09","district_name":"Suhum Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":38000,"coordinates":{"lat":6.0400,"lng":-0.4500}},
+            # ER-10 Nsawam-Adoagyire
+            {"id":"ER-10-T01","name":"Nsawam","district_id":"ER-10","district_name":"Nsawam-Adoagyire Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":45000,"coordinates":{"lat":5.8167,"lng":-0.3500}},
+            # ER-11 Akuapim North
+            {"id":"ER-11-T01","name":"Akropong","district_id":"ER-11","district_name":"Akuapim North Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":25000,"coordinates":{"lat":5.9500,"lng":-0.2833}},
+            {"id":"ER-11-T02","name":"Mamfe","district_id":"ER-11","district_name":"Akuapim North Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":15000,"coordinates":{"lat":5.9167,"lng":-0.2667}},
+            {"id":"ER-11-T03","name":"Aburi","district_id":"ER-11","district_name":"Akuapim North Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":20000,"coordinates":{"lat":5.8500,"lng":-0.1833}},
+            # ER-14 Yilo Krobo
+            {"id":"ER-14-T01","name":"Somanya","district_id":"ER-14","district_name":"Yilo Krobo Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":35000,"coordinates":{"lat":6.1000,"lng":0.0167}},
+            # ER-15 Lower Manya Krobo
+            {"id":"ER-15-T01","name":"Odumase-Krobo","district_id":"ER-15","district_name":"Lower Manya Krobo Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":28000,"coordinates":{"lat":6.0833,"lng":0.0667}},
+            {"id":"ER-15-T02","name":"Kpong","district_id":"ER-15","district_name":"Lower Manya Krobo Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":15000,"coordinates":{"lat":6.1500,"lng":0.0833}},
+            # ER-20 Kwahu West
+            {"id":"ER-20-T01","name":"Nkawkaw","district_id":"ER-20","district_name":"Kwahu West Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":42000,"coordinates":{"lat":6.5500,"lng":-0.7667}},
+            # ER-28 Akwatia
+            {"id":"ER-28-T01","name":"Akwatia","district_id":"ER-28","district_name":"Akwatia District","region_id":"ER","region_name":"Eastern Region","type":"Town","population":38000,"coordinates":{"lat":6.0500,"lng":-0.8000}},
+            # ER-26 Fanteakwa North
+            {"id":"ER-26-T01","name":"Begoro","district_id":"ER-26","district_name":"Fanteakwa North District","region_id":"ER","region_name":"Eastern Region","type":"Town","population":18000,"coordinates":{"lat":6.3833,"lng":-0.3833}},
+            # ER-33 New Juaben South
+            {"id":"ER-33-T01","name":"New Juaben","district_id":"ER-33","district_name":"New Juaben South Municipal","region_id":"ER","region_name":"Eastern Region","type":"Town","population":95000,"coordinates":{"lat":6.0891,"lng":-0.2570}},
+
+            # ====== VOLTA REGION ======
+            # VR-01 Ho Municipal
+            {"id":"VR-01-T01","name":"Ho","district_id":"VR-01","district_name":"Ho Municipal","region_id":"VR","region_name":"Volta Region","type":"City","population":95000,"coordinates":{"lat":6.6009,"lng":0.4702}},
+            {"id":"VR-01-T02","name":"Ho Dome","district_id":"VR-01","district_name":"Ho Municipal","region_id":"VR","region_name":"Volta Region","type":"Suburb","population":18000,"coordinates":{"lat":6.6167,"lng":0.4833}},
+            # VR-02 Keta
+            {"id":"VR-02-T01","name":"Keta","district_id":"VR-02","district_name":"Keta Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":45000,"coordinates":{"lat":5.9167,"lng":0.9833}},
+            {"id":"VR-02-T02","name":"Anloga","district_id":"VR-02","district_name":"Keta Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":20000,"coordinates":{"lat":5.7833,"lng":0.8967}},
+            # VR-03 Hohoe
+            {"id":"VR-03-T01","name":"Hohoe","district_id":"VR-03","district_name":"Hohoe Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":55000,"coordinates":{"lat":7.1500,"lng":0.4667}},
+            {"id":"VR-03-T02","name":"Gbi-Wegbe","district_id":"VR-03","district_name":"Hohoe Municipal","region_id":"VR","region_name":"Volta Region","type":"Village","population":5000,"coordinates":{"lat":7.1667,"lng":0.4833}},
+            # VR-04 Kpando
+            {"id":"VR-04-T01","name":"Kpando","district_id":"VR-04","district_name":"Kpando Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":35000,"coordinates":{"lat":6.9833,"lng":0.2833}},
+            # VR-07 Ketu North
+            {"id":"VR-07-T01","name":"Dzodze","district_id":"VR-07","district_name":"Ketu North Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":28000,"coordinates":{"lat":6.1000,"lng":0.9667}},
+            # VR-08 Ketu South
+            {"id":"VR-08-T01","name":"Aflao","district_id":"VR-08","district_name":"Ketu South Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":50000,"coordinates":{"lat":6.1000,"lng":1.1833}},
+            {"id":"VR-08-T02","name":"Klikor","district_id":"VR-08","district_name":"Ketu South Municipal","region_id":"VR","region_name":"Volta Region","type":"Town","population":20000,"coordinates":{"lat":5.9500,"lng":1.0833}},
+            # VR-13 South Tongu
+            {"id":"VR-13-T01","name":"Sogakope","district_id":"VR-13","district_name":"South Tongu District","region_id":"VR","region_name":"Volta Region","type":"Town","population":18000,"coordinates":{"lat":6.0333,"lng":0.5833}},
+
+            # ====== OTI REGION ======
+            {"id":"OTI-01-T01","name":"Jasikan","district_id":"OTI-01","district_name":"Jasikan District","region_id":"OTI","region_name":"Oti Region","type":"Town","population":25000,"coordinates":{"lat":7.5667,"lng":0.4833}},
+            {"id":"OTI-03-T01","name":"Dambai","district_id":"OTI-03","district_name":"Krachi East Municipal","region_id":"OTI","region_name":"Oti Region","type":"Town","population":28000,"coordinates":{"lat":8.1000,"lng":0.1833}},
+            {"id":"OTI-05-T01","name":"Kete Krachi","district_id":"OTI-05","district_name":"Krachi West District","region_id":"OTI","region_name":"Oti Region","type":"Town","population":20000,"coordinates":{"lat":7.7833,"lng":-0.0500}},
+            {"id":"OTI-08-T01","name":"Nkwanta","district_id":"OTI-08","district_name":"Nkwanta South Municipal","region_id":"OTI","region_name":"Oti Region","type":"Town","population":22000,"coordinates":{"lat":8.2833,"lng":0.5167}},
+
+            # ====== BONO REGION ======
+            {"id":"BR-01-T01","name":"Sunyani","district_id":"BR-01","district_name":"Sunyani Municipal","region_id":"BR","region_name":"Bono Region","type":"City","population":85000,"coordinates":{"lat":7.3397,"lng":-2.3259}},
+            {"id":"BR-01-T02","name":"Sunyani West","district_id":"BR-01","district_name":"Sunyani Municipal","region_id":"BR","region_name":"Bono Region","type":"Suburb","population":20000,"coordinates":{"lat":7.3333,"lng":-2.3500}},
+            {"id":"BR-02-T01","name":"Berekum","district_id":"BR-02","district_name":"Berekum Municipal","region_id":"BR","region_name":"Bono Region","type":"Town","population":55000,"coordinates":{"lat":7.4667,"lng":-2.5833}},
+            {"id":"BR-04-T01","name":"Wenchi","district_id":"BR-04","district_name":"Wenchi Municipal","region_id":"BR","region_name":"Bono Region","type":"Town","population":35000,"coordinates":{"lat":7.7333,"lng":-2.1000}},
+            {"id":"BR-05-T01","name":"Dormaa Ahenkro","district_id":"BR-05","district_name":"Dormaa Central Municipal","region_id":"BR","region_name":"Bono Region","type":"Town","population":45000,"coordinates":{"lat":7.3333,"lng":-3.0000}},
+            {"id":"BR-03-T01","name":"Nsawkaw","district_id":"BR-03","district_name":"Tain District","region_id":"BR","region_name":"Bono Region","type":"Town","population":15000,"coordinates":{"lat":7.5167,"lng":-2.2333}},
+            {"id":"BR-08-T01","name":"Sampa","district_id":"BR-08","district_name":"Jaman North District","region_id":"BR","region_name":"Bono Region","type":"Town","population":18000,"coordinates":{"lat":7.9167,"lng":-2.6833}},
+            {"id":"BR-09-T01","name":"Drobo","district_id":"BR-09","district_name":"Jaman South Municipal","region_id":"BR","region_name":"Bono Region","type":"Town","population":22000,"coordinates":{"lat":7.6833,"lng":-2.7833}},
+
+            # ====== BONO EAST REGION ======
+            {"id":"BE-01-T01","name":"Techiman","district_id":"BE-01","district_name":"Techiman Municipal","region_id":"BE","region_name":"Bono East Region","type":"Town","population":100000,"coordinates":{"lat":7.5886,"lng":-1.9390}},
+            {"id":"BE-02-T01","name":"Atebubu","district_id":"BE-02","district_name":"Atebubu-Amantin Municipal","region_id":"BE","region_name":"Bono East Region","type":"Town","population":35000,"coordinates":{"lat":8.1167,"lng":-1.0500}},
+            {"id":"BE-03-T01","name":"Kintampo","district_id":"BE-03","district_name":"Kintampo North Municipal","region_id":"BE","region_name":"Bono East Region","type":"Town","population":40000,"coordinates":{"lat":8.0500,"lng":-1.7333}},
+            {"id":"BE-06-T01","name":"Nkoranza","district_id":"BE-06","district_name":"Nkoranza South Municipal","region_id":"BE","region_name":"Bono East Region","type":"Town","population":28000,"coordinates":{"lat":7.5500,"lng":-1.5500}},
+            {"id":"BE-07-T01","name":"Yeji","district_id":"BE-07","district_name":"Pru East District","region_id":"BE","region_name":"Bono East Region","type":"Town","population":22000,"coordinates":{"lat":7.8500,"lng":-0.4167}},
+
+            # ====== AHAFO REGION ======
+            {"id":"AH-01-T01","name":"Goaso","district_id":"AH-01","district_name":"Asunafo North Municipal","region_id":"AH","region_name":"Ahafo Region","type":"Town","population":35000,"coordinates":{"lat":6.7942,"lng":-2.5815}},
+            {"id":"AH-02-T01","name":"Kukuom","district_id":"AH-02","district_name":"Asunafo South District","region_id":"AH","region_name":"Ahafo Region","type":"Town","population":18000,"coordinates":{"lat":6.6833,"lng":-2.6167}},
+            {"id":"AH-05-T01","name":"Duayaw Nkwanta","district_id":"AH-05","district_name":"Tano North Municipal","region_id":"AH","region_name":"Ahafo Region","type":"Town","population":28000,"coordinates":{"lat":7.0833,"lng":-2.1000}},
+            {"id":"AH-06-T01","name":"Bechem","district_id":"AH-06","district_name":"Tano South Municipal","region_id":"AH","region_name":"Ahafo Region","type":"Town","population":25000,"coordinates":{"lat":7.0833,"lng":-2.0167}},
+
+            # ====== NORTHERN REGION ======
+            # NR-01 Tamale Metropolitan
+            {"id":"NR-01-T01","name":"Tamale","district_id":"NR-01","district_name":"Tamale Metropolitan","region_id":"NR","region_name":"Northern Region","type":"City","population":360000,"coordinates":{"lat":9.4034,"lng":-0.8424}},
+            {"id":"NR-01-T02","name":"Kukuo","district_id":"NR-01","district_name":"Tamale Metropolitan","region_id":"NR","region_name":"Northern Region","type":"Community","population":30000,"coordinates":{"lat":9.4167,"lng":-0.8500}},
+            {"id":"NR-01-T03","name":"Choggu","district_id":"NR-01","district_name":"Tamale Metropolitan","region_id":"NR","region_name":"Northern Region","type":"Community","population":22000,"coordinates":{"lat":9.4500,"lng":-0.8333}},
+            {"id":"NR-01-T04","name":"Vittin","district_id":"NR-01","district_name":"Tamale Metropolitan","region_id":"NR","region_name":"Northern Region","type":"Community","population":18000,"coordinates":{"lat":9.3833,"lng":-0.8667}},
+            # NR-02 Sagnarigu
+            {"id":"NR-02-T01","name":"Sagnarigu","district_id":"NR-02","district_name":"Sagnarigu Municipal","region_id":"NR","region_name":"Northern Region","type":"Town","population":75000,"coordinates":{"lat":9.5167,"lng":-0.8833}},
+            # NR-03 Savelugu
+            {"id":"NR-03-T01","name":"Savelugu","district_id":"NR-03","district_name":"Savelugu Municipal","region_id":"NR","region_name":"Northern Region","type":"Town","population":42000,"coordinates":{"lat":9.6333,"lng":-0.8333}},
+            # NR-09 Yendi
+            {"id":"NR-09-T01","name":"Yendi","district_id":"NR-09","district_name":"Yendi Municipal","region_id":"NR","region_name":"Northern Region","type":"Town","population":55000,"coordinates":{"lat":9.4333,"lng":-0.0167}},
+            # NR-14 Nanumba North
+            {"id":"NR-14-T01","name":"Bimbilla","district_id":"NR-14","district_name":"Nanumba North Municipal","region_id":"NR","region_name":"Northern Region","type":"Town","population":35000,"coordinates":{"lat":8.8833,"lng":-0.0500}},
+
+            # ====== SAVANNAH REGION ======
+            {"id":"SR-01-T01","name":"Damongo","district_id":"SR-01","district_name":"West Gonja Municipal","region_id":"SR","region_name":"Savannah Region","type":"Town","population":28000,"coordinates":{"lat":9.0667,"lng":-1.8167}},
+            {"id":"SR-02-T01","name":"Salaga","district_id":"SR-02","district_name":"East Gonja Municipal","region_id":"SR","region_name":"Savannah Region","type":"Town","population":25000,"coordinates":{"lat":8.5500,"lng":-0.3167}},
+            {"id":"SR-03-T01","name":"Bole","district_id":"SR-03","district_name":"Bole District","region_id":"SR","region_name":"Savannah Region","type":"Town","population":22000,"coordinates":{"lat":8.9167,"lng":-2.4833}},
+            {"id":"SR-04-T01","name":"Buipe","district_id":"SR-04","district_name":"Central Gonja District","region_id":"SR","region_name":"Savannah Region","type":"Town","population":15000,"coordinates":{"lat":8.9833,"lng":-1.3333}},
+
+            # ====== NORTH EAST REGION ======
+            {"id":"NER-01-T01","name":"Gambaga","district_id":"NER-01","district_name":"East Mamprusi Municipal","region_id":"NER","region_name":"North East Region","type":"Town","population":18000,"coordinates":{"lat":10.5333,"lng":-0.4167}},
+            {"id":"NER-02-T01","name":"Walewale","district_id":"NER-02","district_name":"West Mamprusi Municipal","region_id":"NER","region_name":"North East Region","type":"Town","population":22000,"coordinates":{"lat":10.3000,"lng":-0.9000}},
+            {"id":"NER-03-T01","name":"Bunkpurugu","district_id":"NER-03","district_name":"Bunkpurugu-Nakpanduri District","region_id":"NER","region_name":"North East Region","type":"Town","population":12000,"coordinates":{"lat":10.7667,"lng":-0.0833}},
+
+            # ====== UPPER EAST REGION ======
+            {"id":"UE-01-T01","name":"Bolgatanga","district_id":"UE-01","district_name":"Bolgatanga Municipal","region_id":"UER","region_name":"Upper East Region","type":"City","population":85000,"coordinates":{"lat":10.7856,"lng":-0.8510}},
+            {"id":"UE-01-T02","name":"Soe","district_id":"UE-01","district_name":"Bolgatanga Municipal","region_id":"UER","region_name":"Upper East Region","type":"Community","population":8000,"coordinates":{"lat":10.8000,"lng":-0.8333}},
+            {"id":"UER-02-T01","name":"Bawku","district_id":"UER-02","district_name":"Bawku Municipal","region_id":"UER","region_name":"Upper East Region","type":"Town","population":52000,"coordinates":{"lat":11.0564,"lng":-0.2372}},
+            {"id":"UER-03-T01","name":"Navrongo","district_id":"UER-03","district_name":"Kassena-Nankana Municipal","region_id":"UER","region_name":"Upper East Region","type":"Town","population":38000,"coordinates":{"lat":10.8956,"lng":-1.0939}},
+            {"id":"UER-03-T02","name":"Paga","district_id":"UER-03","district_name":"Kassena-Nankana Municipal","region_id":"UER","region_name":"Upper East Region","type":"Town","population":12000,"coordinates":{"lat":10.9833,"lng":-1.1167}},
+            {"id":"UER-04-T01","name":"Sandema","district_id":"UER-04","district_name":"Builsa North Municipal","region_id":"UER","region_name":"Upper East Region","type":"Town","population":18000,"coordinates":{"lat":10.8833,"lng":-1.3333}},
+            {"id":"UER-07-T01","name":"Bongo","district_id":"UER-07","district_name":"Bongo District","region_id":"UER","region_name":"Upper East Region","type":"Town","population":15000,"coordinates":{"lat":10.8833,"lng":-0.8000}},
+
+            # ====== UPPER WEST REGION ======
+            {"id":"UWR-01-T01","name":"Wa","district_id":"UWR-01","district_name":"Wa Metropolitan","region_id":"UWR","region_name":"Upper West Region","type":"City","population":105000,"coordinates":{"lat":10.0606,"lng":-2.5069}},
+            {"id":"UWR-01-T02","name":"Kpongu","district_id":"UWR-01","district_name":"Wa Metropolitan","region_id":"UWR","region_name":"Upper West Region","type":"Community","population":8000,"coordinates":{"lat":10.0833,"lng":-2.5333}},
+            {"id":"UWR-02-T01","name":"Jirapa","district_id":"UWR-02","district_name":"Jirapa Municipal","region_id":"UWR","region_name":"Upper West Region","type":"Town","population":22000,"coordinates":{"lat":10.3167,"lng":-2.7333}},
+            {"id":"UWR-03-T01","name":"Lawra","district_id":"UWR-03","district_name":"Lawra Municipal","region_id":"UWR","region_name":"Upper West Region","type":"Town","population":18000,"coordinates":{"lat":10.6500,"lng":-2.9000}},
+            {"id":"UWR-04-T01","name":"Nandom","district_id":"UWR-04","district_name":"Nandom Municipal","region_id":"UWR","region_name":"Upper West Region","type":"Town","population":15000,"coordinates":{"lat":10.4833,"lng":-2.8333}},
+            {"id":"UWR-05-T01","name":"Tumu","district_id":"UWR-05","district_name":"Sissala East Municipal","region_id":"UWR","region_name":"Upper West Region","type":"Town","population":18000,"coordinates":{"lat":10.9167,"lng":-1.8167}},
+
+            # ====== WESTERN NORTH REGION ======
+            {"id":"WNR-01-T01","name":"Wiawso","district_id":"WNR-01","district_name":"Sefwi Wiawso Municipal","region_id":"WNR","region_name":"Western North Region","type":"Town","population":35000,"coordinates":{"lat":6.2167,"lng":-2.4833}},
+            {"id":"WNR-02-T01","name":"Bibiani","district_id":"WNR-02","district_name":"Bibiani-Anhwiaso-Bekwai Municipal","region_id":"WNR","region_name":"Western North Region","type":"Town","population":42000,"coordinates":{"lat":6.4667,"lng":-2.3167}},
+            {"id":"WNR-03-T01","name":"Enchi","district_id":"WNR-03","district_name":"Aowin Municipal","region_id":"WNR","region_name":"Western North Region","type":"Town","population":22000,"coordinates":{"lat":6.1000,"lng":-2.7833}},
+            {"id":"WNR-05-T01","name":"Juaboso","district_id":"WNR-05","district_name":"Juaboso District","region_id":"WNR","region_name":"Western North Region","type":"Town","population":12000,"coordinates":{"lat":6.3167,"lng":-2.8333}},
+        ]
+
+        for town in towns_data:
+            coords_json = json.dumps(town['coordinates']) if town.get('coordinates') else None
+            conn.execute('''
+                INSERT OR REPLACE INTO towns
+                (id, name, district_id, district_name, region_id, region_name, type, population, coordinates)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                town['id'],
+                town['name'],
+                town['district_id'],
+                town['district_name'],
+                town['region_id'],
+                town['region_name'],
+                town['type'],
+                town.get('population'),
+                coords_json
+            ))
+
         # Commit all changes
         conn.commit()
-        
+
         # Verify data was inserted
         cursor = conn.execute('SELECT COUNT(*) FROM regions')
         region_count = cursor.fetchone()[0]
-        
+
         cursor = conn.execute('SELECT COUNT(*) FROM districts')
         district_count = cursor.fetchone()[0]
+
+        cursor = conn.execute('SELECT COUNT(*) FROM towns')
+        towns_count = cursor.fetchone()[0]
         
         # Get district breakdown by type
         cursor = conn.execute('''
@@ -634,7 +1044,8 @@ def setup_complete_ghana_database():
         print("="*70)
         print(f" Database location: {database_path}")
         print(f" Total regions: {region_count}/16")
-        print(f" Total districts: {district_count} (showing subset - expandable to 261)")
+        print(f" Total districts: {district_count}")
+        print(f" Total towns/villages: {towns_count}")
         print()
         
         print("District breakdown by type:")
@@ -663,11 +1074,11 @@ def setup_complete_ghana_database():
         print("  curl http://localhost:8000/regions")
         print("  curl http://localhost:8000/search?q=Kumasi")
         print("  curl http://localhost:8000/districts?region=GR")
+        print("  curl http://localhost:8000/towns?district=GR-01")
+        print("  curl http://localhost:8000/districts/AS-01/towns")
         print("  curl http://localhost:8000/statistics")
         print()
         print(" Interactive docs: http://localhost:8000/docs")
-        print(f" Database contains {district_count} districts ready for production use")
-        print(f" Expandable to full 261 districts across all regions")
         
     except Exception as e:
         print(f" Error setting up database: {e}")

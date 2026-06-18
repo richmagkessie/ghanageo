@@ -9,23 +9,28 @@ from .api import (
     get_regions,
     get_region,
     get_districts,
+    get_towns,
+    get_town,
     search,
     get_statistics,
     DataNotFoundError
 )
 
-from .models import Region, District, SearchResult, Coordinates
+from .models import Region, District, Town, SearchResult, Coordinates
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 __all__ = [
     "get_regions",
-    "get_region", 
+    "get_region",
     "get_districts",
+    "get_towns",
+    "get_town",
     "search",
     "get_statistics",
     "DataNotFoundError",
     "Region",
-    "District", 
+    "District",
+    "Town",
     "SearchResult",
     "Coordinates"
 ]
