@@ -923,6 +923,7 @@ def setup_complete_ghana_database():
             # ====== OTI REGION ======
             {"id":"OTI-01-T01","name":"Jasikan","district_id":"OTI-01","district_name":"Jasikan District","region_id":"OTI","region_name":"Oti Region","type":"Town","population":25000,"coordinates":{"lat":7.5667,"lng":0.4833}},
             {"id":"OTI-02-T01","name":"Asato","district_id":"OTI-02","district_name":"Kadjebi District","region_id":"OTI","region_name":"Oti Region","type":"Village","population":None,"coordinates":None},
+            {"id":"OTI-02-T02","name":"Mempeasem","district_id":"OTI-02","district_name":"Kadjebi District","region_id":"OTI","region_name":"Oti Region","type":"Village","population":None,"coordinates":None},
             {"id":"OTI-03-T01","name":"Dambai","district_id":"OTI-03","district_name":"Krachi East Municipal","region_id":"OTI","region_name":"Oti Region","type":"Town","population":28000,"coordinates":{"lat":8.1000,"lng":0.1833}},
             {"id":"OTI-05-T01","name":"Kete Krachi","district_id":"OTI-05","district_name":"Krachi West District","region_id":"OTI","region_name":"Oti Region","type":"Town","population":20000,"coordinates":{"lat":7.7833,"lng":-0.0500}},
             {"id":"OTI-08-T01","name":"Nkwanta","district_id":"OTI-08","district_name":"Nkwanta South Municipal","region_id":"OTI","region_name":"Oti Region","type":"Town","population":22000,"coordinates":{"lat":8.2833,"lng":0.5167}},
