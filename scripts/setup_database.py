@@ -355,7 +355,7 @@ def setup_complete_ghana_database():
             {"id": "WR-17", "name": "Bia West District", "region_id": "WR", "region_name": "Western Region", "type": "District", "capital": "Essam", "population": 79987, "area_km2": 1423.0, "coordinates": {"lat": 6.2167, "lng": -3.0833}},
             
             # WESTERN NORTH REGION (9)
-            {"id": "WNR-01", "name": "Sefwi Wiawso Municipal", "region_id": "WNRR", "region_name": "Western North Region", "type": "Municipal", "capital": "Wiawso", "population": 182510, "area_km2": 2695.0, "coordinates": {"lat": 6.2167, "lng": -2.4833}}, 
+            {"id": "WNR-01", "name": "Sefwi Wiawso Municipal", "region_id": "WNR", "region_name": "Western North Region", "type": "Municipal", "capital": "Wiawso", "population": 182510, "area_km2": 2695.0, "coordinates": {"lat": 6.2167, "lng": -2.4833}}, 
             {"id": "WNR-02", "name": "Bibiani-Anhwiaso-Bekwai Municipal", "region_id": "WNR", "region_name": "Western North Region", "type": "Municipal", "capital": "Bibiani", "population": 144272, "area_km2": 873.0, "coordinates": {"lat": 6.4667, "lng": -2.3167}}, 
             {"id": "WNR-03", "name": "Aowin Municipal", "region_id": "WNR", "region_name": "Western North Region", "type": "Municipal", "capital": "Enchi", "population": 154661, "area_km2": 2638.0, "coordinates": {"lat": 6.1000, "lng": -3.0667}}, 
             {"id": "WNR-04", "name": "Sefwi Akontombra District", "region_id": "WNR", "region_name": "Western North Region", "type": "District", "capital": "Akontombra", "population": 70225, "area_km2": 1159.0, "coordinates": {"lat": 6.0333, "lng": -2.6167}}, 
@@ -462,7 +462,7 @@ def setup_complete_ghana_database():
             { "id": "OTI-05", "name": "Krachi West District", "region_id": "OTI", "region_name": "Oti Region", "type": "District", "capital": "Kete Krachi", "population": 129000, "area_km2": 3200.0, "coordinates": {"lat": 7.7833, "lng": -0.0500} },
             { "id": "OTI-06", "name": "Biakoye District", "region_id": "OTI", "region_name": "Oti Region", "type": "District", "capital": "Nkonya Ahenkro", "population": 118000, "area_km2": 1090.0, "coordinates": {"lat": 7.2167, "lng": 0.3667} },
             { "id": "OTI-07", "name": "Nkwanta North District", "region_id": "OTI", "region_name": "Oti Region", "type": "District", "capital": "Kpassa", "population": 65133, "area_km2": 2300.0, "coordinates": {"lat": 8.4500, "lng": 0.3667} },
-            { "id": "OTI-08", "name": "Nkwanta South Municipal", "region_id": "OT", "region_name": "Oti Region", "type": "Municipal", "capital": "Nkwanta", "population": 117878, "area_km2": 2735.0, "coordinates": {"lat": 8.2833, "lng": 0.5167} },
+            { "id": "OTI-08", "name": "Nkwanta South Municipal", "region_id": "OTI", "region_name": "Oti Region", "type": "Municipal", "capital": "Nkwanta", "population": 117878, "area_km2": 2735.0, "coordinates": {"lat": 8.2833, "lng": 0.5167} },
             { "id": "OTI-09", "name": "Guan District", "region_id": "OTI", "region_name": "Oti Region", "type": "District", "capital": "Likpe-Mate", "population": 56800, "area_km2": 870.0, "coordinates": {"lat": 7.2000, "lng": 0.4500} },
 
             # NORTHERN REGION (16)
